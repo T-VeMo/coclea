@@ -1,5 +1,7 @@
 # 📻 Coclea — Radios chilenas en vivo
 
+🔗 https://tepuku.pythonanywhere.com/
+
 **ES** · Página web para escuchar radios chilenas en vivo, con reproductor, mini reproductor y un muro de mensajes tipo chat que se actualiza cada 5 segundos.
 **EN** · Web app to stream Chilean radio stations live, with a player, a mini player and a chat-style message wall that refreshes every 5 seconds.
 
@@ -13,7 +15,7 @@
 
 ## Tecnologías / Stack
 
-Python · Django 5 · JavaScript · HTML · CSS · SQLite · Gunicorn · WhiteNoise
+Python · Django 5 · JavaScript · HTML · CSS · SQLite · PythonAnywhere
 
 ## Ejecutar en local / Run locally
 
@@ -26,18 +28,12 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-## Publicar en Render / Deploy on Render
+## En línea / Live
 
-El repositorio incluye `render.yaml` y `radioscl/build.sh`. En Render: **New → Blueprint**, elige este repositorio y listo. Render genera la `SECRET_KEY` automáticamente.
+🔗 **https://tepuku.pythonanywhere.com/** (PythonAnywhere)
 
-Para que el sitio publicado tenga las radios, exporta tus emisoras una vez desde tu base local:
-
-```bash
-cd radioscl
-python manage.py dumpdata coclea.EstacionRadio --indent 2 > coclea/fixtures/estaciones.json
-```
-
-> En el plan gratuito de Render la base SQLite se reinicia en cada despliegue: las radios se vuelven a cargar desde el archivo, pero los mensajes del muro se borran.
+En producción se definen dos variables de entorno: `SECRET_KEY` (una clave larga y aleatoria) y `DEBUG=False`.
+In production, set `SECRET_KEY` (a long random key) and `DEBUG=False` as environment variables.
 
 ## Autor / Author
 
