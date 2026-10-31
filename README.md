@@ -7,7 +7,7 @@
 
 - Listado de radios con su dial y reproducción en vivo / Station list with live streaming
 - Mini reproductor / Mini player
-- API JSON de emisoras (`/emisoras.json`) / Stations JSON API
+- API JSON de emisoras (`/emisoras-json/`) / Stations JSON API
 - Muro de mensajes en tiempo real con validación de largo / Real-time message wall with input validation
 - Fondos de video optimizados (MP4 en vez de GIF) / Optimized video backgrounds (MP4 instead of GIF)
 
