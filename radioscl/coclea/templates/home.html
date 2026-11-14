@@ -73,6 +73,17 @@
     <div id="winamp-container"></div>
 
     <script>
+        function crearMensaje(nombre, fecha, mensaje) {
+            const li = document.createElement("li");
+            const strong = document.createElement("strong");
+            strong.textContent = nombre;
+            const small = document.createElement("small");
+            small.textContent = " " + fecha;
+            const texto = document.createElement("div");
+            texto.textContent = mensaje;
+            li.append(strong, small, texto);
+            return li;
+}
     
         function getCookie(name) {
             let cookieValue = null;
@@ -122,11 +133,8 @@
                     minute: "2-digit"
                 });
 
-                const li = document.createElement("li");
-                li.innerHTML = `<strong>${data.nombre}</strong>
-                                <small>${fechaLocal}</small><br>
-                                ${data.mensaje}`;
-
+                const li = crearMensaje(data.nombre, fechaLocal, data.mensaje);
+                
                 document.getElementById("lista-mensajes").prepend(li);
                 document.getElementById("mensaje").value = "";
             });
@@ -154,10 +162,8 @@
                             minute: "2-digit"
                         });
 
-                        const li = document.createElement("li");
-                        li.innerHTML = `<strong>${m.nombre}</strong>
-                                        <small>${fechaLocal}</small><br>
-                                        ${m.mensaje}`;
+                        const li = crearMensaje(m.nombre, fechaLocal, m.mensaje);
+                        
                         lista.appendChild(li);
                     });
                 })
