@@ -7,6 +7,8 @@ const fondos = [
     { url: "/static/img/natureGrn.mp4", tipo: "completo" }
 ]
 
+let fondoActual = 0;
+
 
 function aplicarFondo(index) {
     const fondo = fondos[index];
