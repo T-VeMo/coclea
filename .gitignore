@@ -1,5 +1,7 @@
 __pycache__/
 *.py[cod]
 db.sqlite3
-/staticfiles/
-/.env
+.env
+.DS_Store
+venv/
+radioscl/staticfiles/
