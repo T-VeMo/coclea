@@ -199,7 +199,10 @@
     </script>
 
 
-    <script src="https://unpkg.com/webamp@2.3.1/built/webamp.bundle.min.js"></script>
+    <script type="module">
+        import Webamp from "https://unpkg.com/webamp@2.3.1/built/webamp.butterchurn-bundle.min.mjs";
+        window.Webamp = Webamp;
+    </script>
     <script src="{% static 'emisoras/js/mostrar_skins.js' %}"></script>
     <script src="{% static 'emisoras/js/cambiar_fondo.js' %}"></script>
     <script src="{% static 'emisoras/js/reproductor.js' %}"></script>
