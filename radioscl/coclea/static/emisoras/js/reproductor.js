@@ -17,6 +17,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 initialTracks: tracks,
                 initialSkin: {
                     url: SkinGuardada
+                },
+                windowLayout: {
+                    main:      { position: { top: 0,   left: 0 } },
+                    equalizer: { position: { top: 116, left: 0 } },
+                    playlist:  { position: { top: 232, left: 0 } },
+                    milkdrop:  { position: { top: 0,   left: 275 }, size: { extraWidth: 0, extraHeight: 4 }, closed: true }
                 }
             });
 
