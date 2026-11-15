@@ -25,6 +25,7 @@
                 <input type="text" id="nombre" placeholder="Tu nombre" maxlength="30" required>
                 <textarea id="mensaje" placeholder="Escribe tu mensaje(max 500 caracteres)" maxlength="500" required></textarea>
                 <button type="submit">Enviar</button>
+                <p id="estado-muro" aria-live="polite"></p>
             </form>
 
             <ul id="lista-mensajes">
@@ -102,13 +103,23 @@
 
         const csrftoken = getCookie("csrftoken");
 
+        const estado = document.getElementById("estado-muro");
+
+        function mostrarEstado(texto, esError) {
+            estado.textContent = texto;
+            estado.style.color = esError ? "#ff8080" : "#c874b2";
+            if (!esError) setTimeout(() => estado.textContent = "", 3000);
+        }
+
         document.getElementById("form-muro").addEventListener("submit", function(e) {
             e.preventDefault();
 
             const nombre = document.getElementById("nombre").value.trim();
             const mensaje = document.getElementById("mensaje").value.trim();
-
             if (!nombre || !mensaje) return;
+
+            const boton = e.target.querySelector("button");
+            boton.disabled = true;
 
             const data = new FormData();
             data.append("nombre", nombre);
@@ -116,28 +127,24 @@
 
             fetch("/publicar-mensaje/", {
                 method: "POST",
-                headers: {
-                    "X-CSRFToken": csrftoken
-                },
+                headers: { "X-CSRFToken": csrftoken },
                 body: data
             })
-            .then(res => res.json())
+            .then(res => res.json().catch(() => ({ error: "Error del servidor (" + res.status + ")" })))
             .then(data => {
-                if (data.error) { alert(data.error); return; }
+                if (data.error) { mostrarEstado(data.error, true); return; }
 
                 const fechaLocal = new Date(data.fecha).toLocaleTimeString("es-CL", {
-                    day:"2-digit",
-                    month:"2-digit",
-                    year:"numeric",
-                    hour: "2-digit",
-                    minute: "2-digit"
+                    day: "2-digit", month: "2-digit", year: "numeric",
+                    hour: "2-digit", minute: "2-digit"
                 });
 
-                const li = crearMensaje(data.nombre, fechaLocal, data.mensaje);
-                
-                document.getElementById("lista-mensajes").prepend(li);
+                document.getElementById("lista-mensajes").prepend(crearMensaje(data.nombre, fechaLocal, data.mensaje));
                 document.getElementById("mensaje").value = "";
-            });
+                mostrarEstado("Mensaje enviado ✓", false);
+            })
+            .catch(() => mostrarEstado("No se pudo enviar. Revisa tu conexión.", true))
+            .finally(() => boton.disabled = false);
         });
     </script>
 
@@ -171,8 +178,24 @@
         }
 
         // refresca cada 5 segundos
-        cargarMensajes();
-        setInterval(cargarMensajes, 5000);
+        let intervalo = null;
+
+        function iniciarRefresco() {
+            if (intervalo) return;
+            cargarMensajes();
+            intervalo = setInterval(cargarMensajes, 5000);
+        }
+
+        function detenerRefresco() {
+            clearInterval(intervalo);
+            intervalo = null;
+        }
+
+        document.addEventListener("visibilitychange", () => {
+            document.hidden ? detenerRefresco() : iniciarRefresco();
+        });
+
+        iniciarRefresco();
     </script>
 
 
