@@ -1,7 +1,12 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from .models import EstacionRadio, MensajeMuro
-from django.views.decorators.csrf import csrf_exempt
+from django.core.cache import cache
+
+ESPERA_SEGUNDOS = 10
+
+def obtener_ip(request):
+    return request.META.get("HTTP_X_REAL_IP") or request.META.get("REMOTE_ADDR", "")
 
 
 def home(request):
@@ -28,6 +33,9 @@ def emisoras_json(request):
 
 def publicar_mensaje(request):
     if request.method == "POST":
+        clave = f"muro: {obtener_ip(request)}"
+        if cache.get(clave):
+            return JsonResponse({"error": f"Espera {ESPERA_SEGUNDOS} segundos entre mensajes"}, status=429)
         nombre = request.POST.get("nombre", "").strip()
         mensaje = request.POST.get("mensaje", "").strip()
 
@@ -41,6 +49,8 @@ def publicar_mensaje(request):
             nombre=nombre, 
             mensaje=mensaje
             )
+        cache.set(clave, True, ESPERA_SEGUNDOS)
+        
         return JsonResponse({
             "nombre": msg.nombre,
             "mensaje": msg.mensaje,
