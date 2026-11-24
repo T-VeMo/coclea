@@ -28,7 +28,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
             webamp.renderWhenReady(document.getElementById("winamp-container")).then(() => {
 
-                // Agrega los listeners a los botones para cambiar skins
+                const ultimaRadio = localStorage.getItem("ultimaRadio");
+                const indice = tracks.findIndex(t => t.url === ultimaRadio);
+                if (indice >= 0) {
+                    webamp.setCurrentTrack(indice);
+                }
+
+                webamp.onTrackDidChange(track => {
+                    if (track) {
+                        localStorage.setItem("ultimaRadio", track.url);
+                    }
+                });
+                
                 document.querySelectorAll('#skin-buttons button').forEach(button => {
                     button.addEventListener('click', () => {
                         const newSkinUrl = button.getAttribute('data-skin');
